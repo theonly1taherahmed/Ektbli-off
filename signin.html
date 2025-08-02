@@ -6,6 +6,7 @@
     <title>إنشاء حساب | اكتبلي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary: #6C63FF;
@@ -439,6 +440,18 @@
     </main>
 
     <script>
+        const supabase = Supabase.createClient('https://yuvtjspuwkavnvgsvvly.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dnRqc3B1d2thdm52Z3N2dmx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxNTU2NDYsImV4cCI6MjA2OTczMTY0Nn0.fd_OWx75A3RmmlG43hRYxjGNM718USGFfBnU4xUXzxY');
+        async function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    alert('خطأ في تسجيل الدخول: ' + error.message);
+    return;
+  }
+  alert('تم تسجيل الدخول بنجاح!');
+  window.location.href = 'dashboard.html';
+}
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const signupForm = document.getElementById('signup-form');
         const passwordInput = document.getElementById('password');
