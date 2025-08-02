@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اكتبلي | منصة الكتابة بالذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* الألوان الأساسية */
+            --primary: #6C63FF;
+            --primary-dark: #564FD9;
+            --secondary: #FF6584;
+            --accent: #42E2B8;
+            --text: #2D3748;
+            --text-light: #718096;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            
+            /* دارك مود */
+            --dark-bg: #1A202C;
+            --dark-card: #2D3748;
+            --dark-text: #E2E8F0;
+            --dark-border: #4A5568;
+            --dark-text-light: #A0AEC0;
+        }
+        
+        /* التصميم العام */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-top: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        /* شريط التنقل العلوي */
+        .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            width: 90%;
+            top: 20px;
+            left: 5%;
+            z-index: 1000;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .navbar {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 22px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .beta-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .dark-toggle {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            width: 50px;
+            height: 26px;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .dark-mode .dark-toggle {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        .dark-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .dark-mode .dark-toggle::after {
+            transform: translateX(-24px);
+            background: var(--accent);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            width: 200px;
+            z-index: 1001;
+            display: none;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .user-menu {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .user-menu.show {
+            display: block;
+        }
+        
+        .user-menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .user-menu-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+        
+        .user-menu-item.logout {
+            color: #FF6584;
+        }
+        
+        .user-menu-item.logout:hover {
+            background: rgba(255, 101, 132, 0.1);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            padding: 30px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            align-items: flex-end;
+        }
+        
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .page-title p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+        
+        .dark-mode .page-title p {
+            color: var(--dark-text-light);
+        }
+        
+        /* بطاقات الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .stat-card {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .stat-card:nth-child(1) .icon { background: var(--primary); }
+        .stat-card:nth-child(2) .icon { background: var(--secondary); }
+        .stat-card:nth-child(3) .icon { background: var(--accent); }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .dark-mode .stat-card h3 {
+            color: var(--dark-text-light);
+        }
+        
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .change.up {
+            color: #38A169;
+        }
+        
+        /* مُولد النصوص */
+        .generator-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .generator-container {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .generator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .generator-header h3 {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .generator-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-group {
+            position: relative;
+        }
+        
+        .option-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .dark-mode .option-group label {
+            color: var(--dark-text-light);
+        }
+        
+        .option-group select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 15px;
+            appearance: none;
+        }
+        
+        .dark-mode .option-group select {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .prompt-box textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 180px;
+            resize: vertical;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .dark-mode .prompt-box textarea {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .generate-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .generate-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* نافذة المحادثة */
+        .chat-popup {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            width: 380px;
+            height: 550px;
+            max-height: 80vh;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .dark-mode .chat-popup {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-popup.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dark-mode .chat-header {
+            border-bottom-color: var(--dark-border);
+        }
+        
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .chat-header-info {
+            flex: 1;
+        }
+        
+        .chat-header-info h4 {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .chat-header-info p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        
+        .dark-mode .chat-header-info p {
+            color: var(--dark-text-light);
+        }
+        
+        .chat-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .dark-mode .chat-close {
+            color: var(--dark-text-light);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 90%;
+        }
+        
+        .message.ai {
+            align-self: flex-start;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .message.ai .message-content {
+            background: #F0F4F8;
+            border-top-right-radius: 0;
+        }
+        
+        .dark-mode .message.ai .message-content {
+            background: #2D3748;
+            color: var(--dark-text);
+        }
+        
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+            border-top-left-radius: 0;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 5px;
+            text-align: end;
+        }
+        
+        .dark-mode .message-time {
+            color: var(--dark-text-light);
+        }
+        
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .dark-mode .chat-input {
+            border-top-color: var(--dark-border);
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .quick-action-btn {
+            padding: 8px 12px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .dark-mode .quick-action-btn {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+        }
+        
+        .chat-input-box {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chat-input-box textarea {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            resize: none;
+            min-height: 50px;
+            max-height: 100px;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+        
+        .dark-mode .chat-input-box textarea {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        /* زر المحادثة العائم */
+        .chat-float-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        
+        .chat-float-btn:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* تنبيهات */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .alert-success {
+            background: rgba(66, 226, 184, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(66, 226, 184, 0.3);
+        }
+        
+        .dark-mode .alert-success {
+            background: rgba(66, 226, 184, 0.2);
+            border-color: rgba(66, 226, 184, 0.5);
+        }
+        
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+            
+            .navbar {
+                width: calc(100% - 30px);
+                left: 15px;
+                top: 15px;
+            }
+            
+            .chat-popup {
+                width: calc(100% - 30px);
+                left: 15px;
+                height: 65vh;
+            }
+            
+            .chat-float-btn {
+                left: 15px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <img src="images/ektbli.png" alt="Logo" id="logo-img">
+            <span class="logo-text">اكتبلي</span>
+            <span class="beta-badge">BETA</span>
+        </div>
+        <div class="nav-controls">
+            <div class="dark-toggle" id="dark-mode-toggle"></div>
+            <div class="user-avatar" id="user-avatar">
+                <img src="https://via.placeholder.com/40x40/FF6584/FFFFFF?text=U" alt="User" id="user-avatar-img">
+                <div class="user-menu" id="user-menu">
+                    <div class="user-menu-item" id="settings-btn">
+                        <i class="fas fa-cog"></i>
+                        <span>الإعدادات</span>
+                    </div>
+                    <div class="user-menu-item logout" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- عنوان الصفحة -->
+        <div class="header">
+            <div class="page-title">
+                <h2>لوحة التحكم</h2>
+                <p>منصة الكتابة بالذكاء الاصطناعي م</p>
+            </div>
+        </div>
+
+        <!-- تنبيهات -->
+        <div class="alert alert-success" id="alert-box">
+            <i class="fas fa-check-circle"></i>
+            <span>تم توليد النص بنجاح!</span>
+        </div>
+
+        <!-- إحصائيات -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>النصوص المولدة</h3>
+                <div class="value" id="generated-count">1,248</div>
+                <div class="change up">
+                    <i class="fas fa-arrow-up"></i> 12% عن الشهر الماضي
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-save"></i>
+                </div>
+                <h3>النصوص المحفوظة</h3>
+                <div class="value" id="saved-count">326</div>
+                <div class="change up">
+                    <i class="fas fa-arrow-up"></i> 8% عن الشهر الماضي
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>المستخدمون النشطون</h3>
+                <div class="value" id="users-count">5,421</div>
+                <div class="change up">
+                    <i class="fas fa-arrow-up"></i> 24% عن الشهر الماضي
+                </div>
+            </div>
+        </div>
+
+        <!-- مُولد النصوص -->
+        <div class="generator-container">
+            <div class="generator-header">
+                <h3><i class="fas fa-magic"></i> مُولد النصوص بالذكاء الاصطناعي</h3>
+            </div>
+            <div class="generator-options">
+                <div class="option-group">
+                    <label for="text-type">نوع النص</label>
+                    <select id="text-type">
+                        <option value="article">مقال</option>
+                        <option value="product">وصف منتج</option>
+                        <option value="poem">قصيدة</option>
+                        <option value="story">قصة قصيرة</option>
+                        <option value="social">منشور اجتماعي</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="text-length">طول النص</label>
+                    <select id="text-length">
+                        <option value="short">قصير (100 كلمة)</option>
+                        <option value="medium">متوسط (300 كلمة)</option>
+                        <option value="long">طويل (500 كلمة)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="text-style">النمط</label>
+                    <select id="text-style">
+                        <option value="formal">رسمي</option>
+                        <option value="casual">عامي</option>
+                        <option value="creative">إبداعي</option>
+                    </select>
+                </div>
+            </div>
+            <div class="prompt-box">
+                <label for="user-prompt">ما النص الذي تريد توليده؟</label>
+                <textarea id="user-prompt" placeholder="مثال: اكتب لي مقالًا عن فوائد الذكاء الاصطناعي في التعليم..."></textarea>
+            </div>
+            <button class="generate-btn" id="generate-btn">
+                <i class="fas fa-magic"></i> توليد النص
+            </button>
+        </div>
+    </div>
+
+    <!-- زر المحادثة العائم -->
+    <div class="chat-float-btn" id="chat-float-btn">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- نافذة المحادثة -->
+    <div class="chat-popup" id="chat-popup">
+        <div class="chat-header">
+            <img src="images/ektbli.png" alt="اكتبلي">
+            <div class="chat-header-info">
+                <h4>اكتبلي المساعد</h4>
+                <p>متصل الآن</p>
+            </div>
+            <button class="chat-close" id="chat-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- الرسائل تظهر هنا -->
+            <div class="message ai">
+                <div class="message-avatar">
+                    <img src="images/ektbli.png" alt="اكتبلي">
+                </div>
+                <div>
+                    <div class="message-content">
+                        مرحبًا! أنا اكتبلي، مساعدك الذكي للكتابة. يمكنك اختيار أحد الخيارات السريعة أدناه أو كتابة سؤالك مباشرة.
+                    </div>
+                    <div class="message-time">الآن</div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="quick-actions" id="quick-actions">
+                <button class="quick-action-btn" data-prompt="كيف يمكنني استخدام اكتبلي؟">كيفية الاستخدام</button>
+                <button class="quick-action-btn" data-prompt="ما هي أنواع النصوص التي يمكنك كتابتها؟">أنواع النصوص</button>
+                <button class="quick-action-btn" data-prompt="أعطني مثال على مقال قصير">مثال مقال</button>
+            </div>
+            <div class="chat-input-box">
+                <textarea id="chat-input" placeholder="اكتب رسالتك هنا..."></textarea>
+                <button class="chat-send-btn" id="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // عناصر DOM
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const userAvatar = document.getElementById('user-avatar');
+        const userAvatarImg = document.getElementById('user-avatar-img');
+        const userMenu = document.getElementById('user-menu');
+        const settingsBtn = document.getElementById('settings-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const chatFloatBtn = document.getElementById('chat-float-btn');
+        const chatPopup = document.getElementById('chat-popup');
+        const chatClose = document.getElementById('chat-close');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        const quickActions = document.getElementById('quick-actions');
+        const alertBox = document.getElementById('alert-box');
+
+        // بيانات المحادثة
+        const chatHistory = [
+            {
+                id: 1,
+                sender: 'ai',
+                content: 'مرحبًا! أنا اكتبلي، مساعدك الذكي للكتابة. يمكنك اختيار أحد الخيارات السريعة أدناه أو كتابة سؤالك مباشرة.',
+                time: 'الآن'
+            }
+        ];
+
+        // ردود الذكاء الاصطناعي
+        const aiResponses = {
+            "كيف يمكنني استخدام اكتبلي؟": `يمكنك استخدام اكتبلي بعدة طرق:
+1. اكتب طلبك مباشرة في مربع المحادثة
+2. اختر أحد الخيارات السريعة
+3. استخدم لوحة التحكم الرئيسية لتوليد نصوص متقدمة
+
+يمكنني مساعدتك في كتابة:
+- المقالات والتقارير
+- المحتوى التسويقي
+- القصص والقصائد
+- النصوص الأكاديمية
+- وغير ذلك الكثير!`,
+            
+            "ما هي أنواع النصوص التي يمكنك كتابتها؟": `أستطيع كتابة العديد من أنواع النصوص باحترافية، منها:
+• المقالات والتقارير
+• المحتوى التسويقي ووصف المنتجات
+• القصص القصيرة والروايات
+• القصائد والنصوص الأدبية
+• النصوص الأكاديمية والبحثية
+• السيناريوهات والحوارات
+• الرسائل الرسمية وغير الرسمية
+• المنشورات لوسائل التواصل الاجتماعي
+
+كل ما عليك هو تحديد نوع النص الذي تريده وسأساعدك في كتابته بأفضل صورة.`,
+            
+            "أعطني مثال على مقال قصير": `مقال قصير عن أهمية القراءة:
+
+"تعتبر القراءة من أهم المهارات التي يجب على الفرد اكتسابها في حياته. فهي ليست مجرد وسيلة للتعلم والمعرفة، بل هي نافذة تفتح أمام القارئ عوالم جديدة من الأفكار والثقافات.
+
+تساعد القراءة على توسيع الأفق وتطوير القدرة على التفكير النقدي، كما تعزز المهارات اللغوية وتزيد من حصيلة المفردات. بالإضافة إلى ذلك، تعد القراءة وسيلة ممتازة لتقليل التوتر وتحسين الصحة النفسية.
+
+في عصر المعلومات الذي نعيشه اليوم، أصبحت القراءة أكثر أهمية من أي وقت مضى. فهي السلاح الذي يمكننا من مواجهة التحديات وفهم تعقيدات العالم من حولنا."`
+        };
+
+        // تحميل وضع الألوان المفضل
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تحميل صورة المستخدم من localStorage إن وجدت
+        if (localStorage.getItem('userAvatar')) {
+            userAvatarImg.src = localStorage.getItem('userAvatar');
+        }
+
+        // تبديل وضع الألوان
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // عرض/إخفاء قائمة المستخدم
+        userAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('show');
+        });
+
+        // إغلاق القائمة عند النقر خارجها
+        document.addEventListener('click', (e) => {
+            if (!userAvatar.contains(e.target)) {
+                userMenu.classList.remove('show');
+            }
+        });
+
+        // إعدادات المستخدم
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = 'settings.html';
+        });
+
+        // تسجيل الخروج
+        logoutBtn.addEventListener('click', () => {
+            window.location.href = 'signin.html';
+        });
+
+        // توليد النص
+        generateBtn.addEventListener('click', function() {
+            const prompt = document.getElementById('user-prompt').value.trim();
+            if (!prompt) {
+                showAlert('الرجاء إدخال وصف للنص!', 'error');
+                return;
+            }
+
+            const btn = this;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التوليد...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showAlert('تم توليد النص بنجاح!', 'success');
+                btn.innerHTML = '<i class="fas fa-magic"></i> توليد النص';
+                btn.disabled = false;
+                document.getElementById('user-prompt').value = '';
+            }, 2000);
+        });
+
+        // فتح/إغلاق نافذة المحادثة
+        chatFloatBtn.addEventListener('click', () => {
+            chatPopup.classList.toggle('show');
+            if (chatPopup.classList.contains('show')) {
+                scrollToBottom();
+            }
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatPopup.classList.remove('show');
+        });
+
+        // إرسال رسالة
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            chatInput.value = '';
+            
+            setTimeout(() => {
+                const response = aiResponses[message] || "شكرًا لسؤالك! سأقوم بمعالجة طلبك والرد عليك قريبًا.";
+                addMessage(response, 'ai');
+                scrollToBottom();
+            }, 1000);
+        }
+
+        // إضافة رسالة جديدة
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <img src="${sender === 'ai' ? 'https://via.placeholder.com/36x36/6C63FF/FFFFFF?text=AI' : localStorage.getItem('userAvatar') || 'https://via.placeholder.com/36x36/FF6584/FFFFFF?text=U'}" alt="${sender === 'ai' ? 'اكتبلي' : 'المستخدم'}">
+                </div>
+                <div>
+                    <div class="message-content">${text}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatHistory.push({
+                id: Date.now(),
+                sender,
+                content: text,
+                time
+            });
+        }
+
+        // التمرير إلى الأسفل
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // أحداث إرسال الرسالة
+        chatSendBtn.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // اختيارات سريعة
+        quickActions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('quick-action-btn')) {
+                const prompt = e.target.getAttribute('data-prompt');
+                chatInput.value = prompt;
+                sendMessage();
+            }
+        });
+
+        // عرض التنبيه
+        function showAlert(message, type) {
+            alertBox.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'flex';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

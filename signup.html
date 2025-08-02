@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | اكتبلي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* الألوان الأساسية */
+            --primary: #6C63FF;
+            --primary-dark: #564FD9;
+            --secondary: #FF6584;
+            --accent: #42E2B8;
+            --text: #2D3748;
+            --text-light: #718096;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            
+            /* دارك مود */
+            --dark-bg: #1A202C;
+            --dark-card: #2D3748;
+            --dark-text: #E2E8F0;
+            --dark-border: #4A5568;
+            --dark-text-light: #A0AEC0;
+        }
+        
+        /* التصميم العام */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-top: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        /* شريط التنقل العلوي */
+        .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 90%;
+            top: 20px;
+            left: 5%;
+            z-index: 1000;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .navbar {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 22px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .beta-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .beta-badge::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.8; }
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dark-toggle {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            width: 45px;
+            height: 24px;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .dark-mode .dark-toggle {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        .dark-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .dark-mode .dark-toggle::after {
+            transform: translateX(-21px);
+            background: var(--accent);
+        }
+        
+        /* محتوى الصفحة */
+        .main-content {
+            padding: 40px 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .auth-container {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .dark-mode .auth-title {
+            color: var(--dark-text);
+        }
+        
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .dark-mode .auth-subtitle {
+            color: var(--dark-text-light);
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .dark-mode .auth-form label {
+            color: var(--dark-text);
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .dark-mode .auth-form input {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .auth-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .auth-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .auth-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        .auth-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .social-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .social-divider {
+            color: var(--dark-text-light);
+        }
+        
+        .social-divider::before,
+        .social-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin: 0 10px;
+        }
+        
+        .dark-mode .social-divider::before,
+        .dark-mode .social-divider::after {
+            background: var(--dark-border);
+        }
+        
+        .social-btn {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .dark-mode .social-btn {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* الفوتر */
+        .footer {
+            background: var(--card-bg);
+            padding: 15px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .dark-mode .footer {
+            background: var(--dark-card);
+            border-top-color: var(--dark-border);
+        }
+        
+        .footer-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .footer-text {
+            color: var(--dark-text-light);
+        }
+        
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .navbar {
+                width: calc(100% - 30px);
+                left: 15px;
+                top: 15px;
+                padding: 10px 15px;
+            }
+            
+            .auth-container {
+                padding: 30px;
+            }
+            
+            .auth-actions {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            
+            .auth-link {
+                width: 100%;
+                text-align: right;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 25px 20px;
+            }
+            
+            .auth-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <img src="images/ektbli.png" alt="Logo" id="logo-img">
+            <span class="logo-text">اكتبلي</span>
+            <span class="beta-badge">BETA</span>
+        </div>
+        <div class="nav-controls">
+            <div class="dark-toggle" id="dark-mode-toggle"></div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">تسجيل الدخول</h1>
+                <p class="auth-subtitle">أدخل بياناتك للوصول إلى حسابك</p>
+            </div>
+            
+            <form class="auth-form" id="login-form">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" placeholder="أدخل كلمة المرور" required>
+                </div>
+                
+                <div class="auth-actions">
+                    <a href="resetpassword.html" class="auth-link">هل نسيت كلمة المرور؟</a>
+                    <a href="signin.html" class="auth-link">ليس لديك حساب؟</a>
+                </div>
+                
+                <button type="submit" class="auth-btn">تسجيل الدخول</button>
+            </form>
+            
+            <div class="social-login">
+                <div class="social-divider">أو</div>
+                <button class="social-btn">
+                    <i class="fab fa-google"></i>
+                    تسجيل الدخول بواسطة جوجل
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // عناصر DOM
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const loginForm = document.getElementById('login-form');
+
+        // تحميل وضع الألوان المفضل
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تبديل وضع الألوان
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // تسجيل الدخول
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // هنا يمكنك إضافة كود تسجيل الدخول الفعلي
+            console.log('تسجيل الدخول بمعلومات:', { email, password });
+            
+            // توجيه المستخدم بعد تسجيل الدخول
+            window.location.href = 'dashboard.html';
+        });
+
+        // تأثيرات عند التمرير
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 30) {
+                navbar.style.top = '10px';
+                navbar.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.top = '20px';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اكتبلي | منصة الكتابة بالذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* الألوان الأساسية */
+            --primary: #6C63FF;
+            --primary-dark: #564FD9;
+            --secondary: #FF6584;
+            --accent: #42E2B8;
+            --text: #2D3748;
+            --text-light: #718096;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            
+            /* دارك مود */
+            --dark-bg: #1A202C;
+            --dark-card: #2D3748;
+            --dark-text: #E2E8F0;
+            --dark-border: #4A5568;
+            --dark-text-light: #A0AEC0;
+        }
+        
+        /* التصميم العام */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-top: 70px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        /* شريط التنقل العلوي */
+        .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            width: 90%;
+            top: 15px;
+            left: 5%;
+            z-index: 1000;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .navbar {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 22px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .beta-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .beta-badge::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.8; }
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dark-toggle {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            width: 45px;
+            height: 24px;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .dark-mode .dark-toggle {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        .dark-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .dark-mode .dark-toggle::after {
+            transform: translateX(-21px);
+            background: var(--accent);
+        }
+        
+        .login-btn, .start-free-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .login-btn:hover, .start-free-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* القسم الرئيسي */
+        .hero {
+            padding: 40px 5% 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, rgba(108, 99, 255, 0) 70%);
+            z-index: -1;
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            max-width: 100%;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+        
+        .dark-mode .hero-subtitle {
+            color: var(--dark-text-light);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .primary-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .secondary-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .secondary-btn:hover {
+            background: rgba(108, 99, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .hero-image {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--dark-border);
+        }
+        
+        /* قسم المميزات */
+        .features {
+            padding: 40px 5%;
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0), var(--bg));
+        }
+        
+        .dark-mode .features {
+            background: linear-gradient(to bottom, rgba(26, 32, 44, 0), var(--dark-bg));
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .dark-mode .feature-card {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .feature-desc {
+            color: var(--text-light);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .dark-mode .feature-desc {
+            color: var(--dark-text-light);
+        }
+        
+        /* قسم كيف يعمل */
+        .how-it-works {
+            padding: 40px 5%;
+            background: var(--bg);
+        }
+        
+        .dark-mode .how-it-works {
+            background: var(--dark-bg);
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 30px;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .step {
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .step-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            flex: 1;
+        }
+        
+        .dark-mode .step-content {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .step-desc {
+            color: var(--text-light);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .dark-mode .step-desc {
+            color: var(--dark-text-light);
+        }
+        
+        /* قسم الاشتراكات */
+        .pricing {
+            padding: 40px 5%;
+            background: linear-gradient(to bottom, var(--bg), rgba(248, 250, 252, 0.8));
+            text-align: center;
+        }
+        
+        .dark-mode .pricing {
+            background: linear-gradient(to bottom, var(--dark-bg), rgba(26, 32, 44, 0.8));
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode .pricing-card {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .pricing-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-price {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .pricing-period {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .dark-mode .pricing-period {
+            color: var(--dark-text-light);
+        }
+        
+        .pricing-features {
+            margin-bottom: 20px;
+        }
+        
+        .pricing-feature {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .dark-mode .pricing-feature {
+            border-bottom-color: var(--dark-border);
+            color: var(--dark-text-light);
+        }
+        
+        .pricing-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .pricing-card.popular .pricing-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .pricing-card:not(.popular) .pricing-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .pricing-card.popular .pricing-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .pricing-card:not(.popular) .pricing-btn:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+        
+        /* الفوتر */
+        .footer {
+            background: var(--card-bg);
+            padding: 20px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .dark-mode .footer {
+            background: var(--dark-card);
+            border-top-color: var(--dark-border);
+        }
+        
+        .footer-text {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .dark-mode .footer-text {
+            color: var(--dark-text-light);
+        }
+        
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .navbar {
+                width: calc(100% - 20px);
+                left: 10px;
+                top: 10px;
+                padding: 8px 15px;
+            }
+            
+            .logo img {
+                height: 25px;
+            }
+            
+            .logo-text {
+                font-size: 16px;
+            }
+            
+            .beta-badge {
+                font-size: 9px;
+                padding: 2px 6px;
+                margin-right: 5px;
+            }
+            
+            .dark-toggle {
+                width: 40px;
+                height: 22px;
+            }
+            
+            .dark-toggle::after {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .login-btn, .start-free-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                gap: 4px;
+            }
+            
+            .hero {
+                padding-top: 30px;
+            }
+            
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .steps::before {
+                right: 25px;
+            }
+            
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <img src="images/ektbli.png" alt="Logo" id="logo-img">
+            <span class="logo-text">اكتبلي</span>
+            <span class="beta-badge">BETA</span>
+        </div>
+        <div class="nav-controls">
+            <div class="dark-toggle" id="dark-mode-toggle"></div>
+            <button class="login-btn" id="login-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                تسجيل الدخول
+            </button>
+        </div>
+    </nav>
+
+    <!-- القسم الرئيسي -->
+    <section class="hero">
+        <h1 class="hero-title">اكتشف قوة الكتابة بالذكاء الاصطناعي</h1>
+        <p class="hero-subtitle">اكتبلي منصة متقدمة تساعدك على إنشاء محتوى فريد بلمسة بشرية، بسرعة ودقة عالية باستخدام أحدث تقنيات الذكاء الاصطناعي</p>
+        <div class="cta-buttons">
+            <button class="primary-btn start-free-btn" id="start-free-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                ابدأ الآن
+            </button>
+            <button class="secondary-btn" id="learn-more-btn">
+                <i class="fas fa-play-circle"></i>
+                شاهد الفيديو
+            </button>
+        </div>
+    </section>
+
+    <!-- قسم المميزات -->
+    <section class="features">
+        <h2 class="section-title">لماذا تختار اكتبلي؟</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">سرعة فائقة</h3>
+                <p class="feature-desc">أنشئ محتوى عالي الجودة في دقائق بدلاً من ساعات. وفر وقتك واجهدك مع تقنياتنا المتقدمة.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">ذكاء متطور</h3>
+                <p class="feature-desc">محرك كتابة ذكي يفهم السياق وينتج محتوى طبيعي يواكب أحدث تطورات الذكاء الاصطناعي.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-language"></i>
+                </div>
+                <h3 class="feature-title">لغة عربية فصيحة</h3>
+                <p class="feature-desc">نصوص عربية سليمة بلهجات مختلفة، مع دعم كامل للقواعد اللغوية والأساليب البلاغية.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h3 class="feature-title">تخصيص كامل</h3>
+                <p class="feature-desc">تحكم كامل في نمط الكتابة وطول النص ومستوى الرسمية ليناسب احتياجاتك بدقة.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">خصوصية وأمان</h3>
+                <p class="feature-desc">بياناتك محمية بنظام تشفير متقدم. نحن لا نخزن نصوصك أو نستخدمها لأي أغراض أخرى.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3 class="feature-title">أفكار إبداعية</h3>
+                <p class="feature-desc">تخلص من جمود الأفكار مع اقتراحات ذكية تساعدك على تطوير محتوى متميز وجذاب.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم كيف يعمل -->
+    <section class="how-it-works">
+        <h2 class="section-title">كيف يعمل اكتبلي؟</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">اختر نوع المحتوى</h3>
+                    <p class="step-desc">حدد نوع النص الذي تريده (مقال، قصة، وصف منتج، منشور اجتماعي، إلخ) واختر الطول والنمط المناسب.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">أدخل وصفاً موجزاً</h3>
+                    <p class="step-desc">اكتب وصفاً بسيطاً لما تريد كتابته. كلما كانت التعليمات أوضح، كانت النتائج أفضل.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">اضغط على توليد</h3>
+                    <p class="step-desc">اضغط على زر التوليد وانتظر بضع ثوانٍ فقط لتحصل على نصوص جاهزة بجودة عالية.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3 class="step-title">حرر واحفظ</h3>
+                    <p class="step-desc">يمكنك تعديل النص الناتج يدوياً أو طلب إعادة صياغته، ثم حفظه أو تصديره للاستخدام.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الاشتراكات -->
+    <section class="pricing">
+        <h2 class="section-title">خطط الأسعار</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="pricing-title">المجاني</h3>
+                <div class="pricing-price">0$</div>
+                <div class="pricing-period">شهرياً</div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">10 نصوص شهرياً</div>
+                    <div class="pricing-feature">نصوص حتى 300 كلمة</div>
+                    <div class="pricing-feature">3 أنماط كتابة</div>
+                    <div class="pricing-feature">دعم أساسي</div>
+                </div>
+                <button class="pricing-btn">ابدأ الآن</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">الأكثر شيوعاً</div>
+                <h3 class="pricing-title">المحترف</h3>
+                <div class="pricing-price">2.99$</div>
+                <div class="pricing-period">شهرياً</div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">100 نص شهرياً</div>
+                    <div class="pricing-feature">نصوص حتى 1000 كلمة</div>
+                    <div class="pricing-feature">جميع أنماط الكتابة</div>
+                    <div class="pricing-feature">دعم فوري</div>
+                    <div class="pricing-feature">حفظ غير محدود</div>
+                </div>
+                <button class="pricing-btn">اشترك الآن</button>
+            </div>
+            <div class="pricing-card">
+                <h3 class="pricing-title">الشركات</h3>
+                <div class="pricing-price">9.99$</div>
+                <div class="pricing-period">شهرياً</div>
+                <div class="pricing-features">
+                    <div class="pricing-feature">نصوص غير محدودة</div>
+                    <div class="pricing-feature">نصوص بأي طول</div>
+                    <div class="pricing-feature">ميزات متقدمة</div>
+                    <div class="pricing-feature">دعم مميز</div>
+                    <div class="pricing-feature">فرق متعددة</div>
+                    <div class="pricing-feature">تصدير بخصائص متقدمة</div>
+                </div>
+                <button class="pricing-btn">تواصل معنا</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <p class="footer-text">اكتبلي - 2025 ©</p>
+    </footer>
+
+    <script>
+        // عناصر DOM
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const loginBtn = document.getElementById('login-btn');
+        const startFreeBtn = document.getElementById('start-free-btn');
+        const learnMoreBtn = document.getElementById('learn-more-btn');
+        const pricingBtns = document.querySelectorAll('.pricing-btn');
+
+        // تحميل وضع الألوان المفضل
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تبديل وضع الألوان
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        // تسجيل الدخول
+        function handleLogin() {
+            window.location.href = 'signup.html';
+        }
+
+        loginBtn.addEventListener('click', handleLogin);
+        startFreeBtn.addEventListener('click', handleLogin);
+
+        // تعلم المزيد
+        learnMoreBtn.addEventListener('click', () => {
+            window.open('https://youtube.com', '_blank');
+        });
+
+        // تأثيرات عند التمرير
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 30) {
+                navbar.style.top = '10px';
+                navbar.style.boxShadow = '0 3px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.top = '15px';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // تأثيرات للبطاقات عند التمرير
+        const featureCards = document.querySelectorAll('.feature-card');
+        const steps = document.querySelectorAll('.step');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        featureCards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            observer.observe(card);
+        });
+        
+        steps.forEach(step => {
+            step.style.opacity = 0;
+            step.style.transform = 'translateX(-20px)';
+            step.style.transition = 'all 0.5s ease';
+            observer.observe(step);
+        });
+
+        // جعل أزرار الاشتراك تعمل مثل زر تسجيل الدخول
+        pricingBtns.forEach(btn => {
+            if (btn.textContent.includes('ابدأ الآن') || btn.textContent.includes('اشترك الآن')) {
+                btn.addEventListener('click', handleLogin);
+            }
+        });
+    </script>
+</body>
+</html>

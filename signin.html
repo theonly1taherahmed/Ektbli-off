@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب | اكتبلي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #564FD9;
+            --secondary: #FF6584;
+            --accent: #42E2B8;
+            --text: #2D3748;
+            --text-light: #718096;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            --dark-bg: #1A202C;
+            --dark-card: #2D3748;
+            --dark-text: #E2E8F0;
+            --dark-border: #4A5568;
+            --dark-text-light: #A0AEC0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-top: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        .navbar {
+            background: var(--card-bg);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            width: 90%;
+            top: 20px;
+            left: 5%;
+            z-index: 1000;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .navbar {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 22px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .beta-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .beta-badge::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.8; }
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dark-toggle {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            width: 45px;
+            height: 24px;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .dark-mode .dark-toggle {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+        
+        .dark-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .dark-mode .dark-toggle::after {
+            transform: translateX(-21px);
+            background: var(--accent);
+        }
+        
+        .main-content {
+            padding: 40px 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .dark-mode .auth-container {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .dark-mode .auth-title {
+            color: var(--dark-text);
+        }
+        
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .dark-mode .auth-subtitle {
+            color: var(--dark-text-light);
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .dark-mode .auth-form label {
+            color: var(--dark-text);
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .dark-mode .auth-form input {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .password-requirements {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            background-color: rgba(108, 99, 255, 0.05);
+        }
+        
+        .dark-mode .password-requirements {
+            color: var(--dark-text-light);
+            border-color: var(--dark-border);
+            background-color: rgba(108, 99, 255, 0.1);
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 3px;
+        }
+        
+        .requirement i {
+            font-size: 0.7rem;
+        }
+        
+        .requirement.valid {
+            color: #38A169;
+        }
+        
+        .requirement.invalid {
+            color: #E53E3E;
+        }
+        
+        #password-match {
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .auth-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .auth-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .auth-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .auth-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .auth-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+        
+        .dark-mode .auth-btn:disabled {
+            background: var(--dark-text-light);
+        }
+        
+        .footer {
+            background: var(--card-bg);
+            padding: 15px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .dark-mode .footer {
+            background: var(--dark-card);
+            border-top-color: var(--dark-border);
+        }
+        
+        .footer-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .footer-text {
+            color: var(--dark-text-light);
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                width: calc(100% - 30px);
+                left: 15px;
+                top: 15px;
+                padding: 10px 15px;
+            }
+            
+            .auth-container {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 25px 20px;
+            }
+            
+            .auth-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <img src="images/ektbli.png" alt="Logo" id="logo-img">
+            <span class="logo-text">اكتبلي</span>
+            <span class="beta-badge">BETA</span>
+        </div>
+        <div class="nav-controls">
+            <div class="dark-toggle" id="dark-mode-toggle"></div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">إنشاء حساب جديد</h1>
+                <p class="auth-subtitle">املأ النموذج أدناه لإنشاء حسابك</p>
+            </div>
+            
+            <form class="auth-form" id="signup-form">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" placeholder="أدخل كلمة المرور" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">تأكيد كلمة المرور</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="أعد إدخال كلمة المرور" required>
+                    <div id="password-match" class="password-requirements"></div>
+                    
+                    <div class="password-requirements">
+                        <p>يجب أن تحتوي كلمة المرور على:</p>
+                        <div class="requirement" id="length-req">
+                            <i class="fas fa-circle"></i>
+                            <span>8 أحرف على الأقل</span>
+                        </div>
+                        <div class="requirement" id="uppercase-req">
+                            <i class="fas fa-circle"></i>
+                            <span>حرف كبير واحد على الأقل (A-Z)</span>
+                        </div>
+                        <div class="requirement" id="lowercase-req">
+                            <i class="fas fa-circle"></i>
+                            <span>حرف صغير واحد على الأقل (a-z)</span>
+                        </div>
+                        <div class="requirement" id="number-req">
+                            <i class="fas fa-circle"></i>
+                            <span>رقم واحد على الأقل (0-9)</span>
+                        </div>
+                        <div class="requirement" id="special-req">
+                            <i class="fas fa-circle"></i>
+                            <span>حرف خاص واحد على الأقل (!@#$%^&*)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="auth-btn" id="submit-btn" disabled>إنشاء حساب</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>لديك حساب بالفعل؟ <a href="signup.html" class="auth-link">تسجيل الدخول</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const signupForm = document.getElementById('signup-form');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const submitBtn = document.getElementById('submit-btn');
+        const passwordMatchMsg = document.getElementById('password-match');
+
+        const requirements = {
+            length: document.getElementById('length-req'),
+            uppercase: document.getElementById('uppercase-req'),
+            lowercase: document.getElementById('lowercase-req'),
+            number: document.getElementById('number-req'),
+            special: document.getElementById('special-req')
+        };
+
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        });
+
+        function checkPasswordRequirements(password) {
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*]/.test(password);
+            
+            updateRequirementUI(requirements.length, hasLength);
+            updateRequirementUI(requirements.uppercase, hasUppercase);
+            updateRequirementUI(requirements.lowercase, hasLowercase);
+            updateRequirementUI(requirements.number, hasNumber);
+            updateRequirementUI(requirements.special, hasSpecial);
+            
+            return hasLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+        }
+
+        function updateRequirementUI(element, isValid) {
+            if (isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+                element.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+                element.querySelector('i').className = 'fas fa-times-circle';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (password && confirmPassword) {
+                if (password === confirmPassword) {
+                    passwordMatchMsg.innerHTML = '<span style="color:#38A169;">كلمتا المرور متطابقتان</span>';
+                    return true;
+                } else {
+                    passwordMatchMsg.innerHTML = '<span style="color:#E53E3E;">كلمتا المرور غير متطابقتان</span>';
+                    return false;
+                }
+            } else {
+                passwordMatchMsg.innerHTML = '';
+                return false;
+            }
+        }
+
+        function updateSubmitButton() {
+            const isPasswordValid = checkPasswordRequirements(passwordInput.value);
+            const isMatch = checkPasswordMatch();
+            
+            submitBtn.disabled = !(isPasswordValid && isMatch);
+        }
+
+        passwordInput.addEventListener('input', () => {
+            checkPasswordRequirements(passwordInput.value);
+            checkPasswordMatch();
+            updateSubmitButton();
+        });
+
+        confirmPasswordInput.addEventListener('input', () => {
+            checkPasswordMatch();
+            updateSubmitButton();
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('إنشاء حساب بمعلومات:', { email, password });
+            window.location.href = 'dashboard.html';
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 30) {
+                navbar.style.top = '10px';
+                navbar.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.top = '20px';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
